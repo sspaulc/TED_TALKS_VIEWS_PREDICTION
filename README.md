@@ -24,137 +24,165 @@ TED is devoted to spreading powerful ideas on just about any topic. These datase
 17. Description
 18. Transcript
 
-3. Types of Pricing
-Static Pricing
-Dynamic Pricing(Surge Pricing)
-The distance and travel time based taxi pricing scheme (Static Pricing) has been prevalent for decades. One major drawback of the current taxi price is that it fails to take the time of day into consideration while the demand in the market is time sensitive. So there is a need for Dynamic pricing.
-
-4. Reasons for surge pricing
-The reasons for surge pricing are:
-normal peak-hours
-bad weather conditions (rain, snow, etc)
-events (concerts, movie-premiere)
-traffic conditions
-unseen emergencies and so on.
-
-5. How Surge pricing works
-Demand for rides increases
-There are times when so many people are requesting rides that there aren’t enough cars on the road to help take them all. Bad weather, rush hour, and special events, for instance, may cause unusually large numbers of people to want to request a ride with Sigma all at the same time.
-Prices go up
-In these cases of very high demand, prices may increase to help ensure that those who need a ride can get one. This system is called surge pricing, and it lets the app continue to be a reliable choice.
-Riders pay more or wait
-Whenever rates are raised due to surge pricing, the app lets riders know. Some riders will choose to pay, while some will choose to wait a few minutes to see if the rates go back down.
-
-6. Steps involved:
+3. Steps involved:
  
-Exploratory Data Analysis 
-After loading the dataset we performed this method by comparing our target variable that is Surge_Pricing_Type with other independent variables. This process helped us figuring out various aspects and relationships among the target and the independent variables. It gave us a better idea of which feature behaves in which manner compared to the target variable.
+Data Collection
+To proceed with the problem dealing first we will load our dataset that is given to us in .csv file into a dataframe.Mount the drive and load the csv file into a dataframe. 
+
+Exploratory Data Analysis
+After loading the dataset we looked for duplicate values in the ‘talk_id’ 
+column. There were none. So We performed EDA by comparing our target variable that is Views with other independent variables. This process helped us figuring out various aspects and relationships among the target and the independent variables. It gave us a better idea of which feature behaves in which manner compared to the target variable.
+Numerical Variables:
+Talk_id
+Views
+Comments
+duration
+Textual Variables:
+Title
+Speaker_1
+Recorded_date
+Published_date
+Event
+Native_lang
+Url
+Description
+Dictionaries:
+Speakers
+Occupations
+About_speakers
+Related_talks
+List:
+topics
+
+Out of all the continuous variables, ‘views’ is the target variable.
+The target variable ‘views’ was a skewed variable.
+ The other continuous variables have distributions as:
+Comments
+
+Duration
+
+All of the data had very skewed continuous variable distributions.
 
 Null values Treatment
-Our dataset contains a large number of null values which might tend to disturb our accuracy hence we dropped them at the beginning of our project inorder to get a better result.
+Our dataset contains around 400 null values which might tend to disturb our mean absolute score hence we have performed KNN nan value imputer for numerical features and replaced categorical features nan 
+
+values with the value ‘Other’. We chose to impute nan values and not drop them due to the size of the data set
 
 Encoding of categorical columns 
-We used One Hot Encoding to produce binary integers of 0 and 1 to encode our categorical features because categorical features that are in string format cannot be understood by the machine and needs to be converted to numerical format.
+We used Target Encoding for replacing the values of categorical variables with the mean of the views. This was done to not increase the dimensions to the data set while also keeping the relationship of variables with views into consideration.
 
 Feature Selection
-In these steps we used algorithms like ExtraTree classifier to check the results of each feature i.e which feature is more important compared 
+For Feature Selection we have done the following: we have introduced new numerical features from the categorical features,combined features and also we have used f_regression in which we have taken the features with the maximum f-scores.
 
-to our model and which is of less importance.
-Next we used Chi2 for categorical features and ANOVA for numerical features to select the best feature which we will be using further in our model.
-
-Standardization of features
-Our main motive through this step was to scale our data into a uniform format that would allow us to utilize the data in a better way while performing fitting and applying different algorithms to it. 
-The basic goal was to enforce a level of consistency or uniformity to certain practices or operations within the selected environment.
+Outlier Treatment
+We have done outlier treatment on variables like duration and occupation. This was done by replacing outliers with the extreme values at the first and third quartiles. We have done outlier treatment to prevent high errors that were influenced by outliers.
 
 Fitting different models
-For modelling we tried various classification algorithms like:
-Logistic Regression
-SVM Classifier
-Random Forest Classifier
-XGBoost classifier
+For modelling we tried various regression algorithms like:
+XGBoost Regressor
+Extra Trees Regressor
+
+Random Forest Regressor
  
 Tuning the hyperparameters for better accuracy
-Tuning the hyperparameters of respective algorithms is necessary for getting better accuracy and to avoid overfitting in case of tree based models 
-like Random Forest Classifier and XGBoost classifier. 
-
-SHAP Values for features
-7.1. Algorithms:
-
-Logistic Regression:
-Logistic Regression is actually a classification algorithm that was given the name regression due to the fact that the mathematical formulation is very similar to linear regression.
-The function used in Logistic Regression is sigmoid function or the logistic function given by:
-		f(x)= 1/1+e ^(-x)
+Tuning the hyperparameters of respective algorithms is necessary for less error values,regularization  and to avoid overfitting in case of tree based models.
 
 
-The optimization algorithm used is: Maximum Log Likelihood. We mostly take log likelihood in Logistic
+4.1. Algorithms:
+We have used only non-parametric models for prediction because two of the hypotheses such as linearity between output and input variables and errors normally distributed were not met.
 
-Support Vector Machine Classifier:
-SVM is used mostly when the data cannot be linearly separated by logistic regression and the data has noise. This can be done by separating the data with a hyperplane at a higher order dimension.
-In SVM we use the optimization algorithm as:
-We use hinge loss to deal with the noise when the data isn’t linearly separable.
-Kernel functions can be used to map data to higher dimensions when there is inherent non linearity.
+XGBoost Regression:
+Gradient boosting refers to a class of ensemble machine learning algorithms that can be used for classification or regression predictive modeling problems.Extreme Gradient Boosting, or XGBoost for short, is an efficient open-source implementation of the gradient boosting algorithm. It is computationally effectively faster with better model performance.
+XGboost can be optimized by fixing the number of trees, fixing learning rate,tuning gamma, tuning regularization and various hyper parameter tuning.
+When we implemented this model we got the following scores :
 
-Random Forest Classifier:
-Random Forest is a bagging type of Decision Tree Algorithm that creates a number of decision trees from a randomly selected subset of the training set, collects the labels from these subsets and then averages the final prediction depending on the most number of times a label has been predicted out of all.
+MAE train: 164091.332037
+MAE test: 226944.860549
+R2_Score train: 0.918158
+R2_Score test: 0.830151
+RMSE_Score train: 315411.385197
+RMSE_Score test: 454270.753145
+
+.
+Extra Trees Regressor:
+Extremely Randomized Trees, or Extra Trees for short, is an ensemble machine learning algorithm.
+Specifically, it is an ensemble of decision trees and is related to other ensembles of decision trees algorithms such as bootstrap aggregation (bagging) and random forest.
+The Extra Trees algorithm works by creating a large number of unpruned decision trees from the training dataset. Predictions are made by averaging the prediction of the decision trees.
+The random selection of split points makes the decision trees in the ensemble less correlated, although this increases the variance of the algorithm. This increase in variance can be countered by increasing the number of trees used in the ensemble.
+We use the criterion as ‘MAE’ as it uses L1 regularization to select the median and selects the best features for reducing the mean absolute error. 
+MAE is used as it is not influenced by outliers.
+Scores obtained were:
+
+MAE_train : 207304.048833
+MAE_test: 204793.751052
+R2_Score_train: 0.796536
+R2_Score_test:0.806390
+RMSE_Score_train:497317.341381
+RMSE_Score_test:485005.01521
+
+Random Forest Regressor:
+Every decision tree has high variance, but when we combine all of them together in parallel then the resultant variance is low as each decision tree gets perfectly trained on that particular sample data and hence the output doesn’t depend on one decision tree but multiple decision trees. In the case of a classification problem, the final output is taken by using the majority voting classifier. In the case of a regression problem, the final output is the mean of all the outputs.
+
+A Random Forest is an ensemble technique capable of performing both regression and classification tasks with the use of multiple decision trees and a technique called Bootstrap and Aggregation, commonly known as bagging. The basic idea behind this is to combine multiple decision trees in determining the final output rather than relying on individual decision trees.
+Random Forest has multiple decision trees as base learning models. We randomly perform row sampling and feature sampling from the dataset forming sample datasets for every model. This part is called Bootstrap.
+
+MAE train: 186583.315347 
+MAE test: 191844.536467
+R2_Score train:0.806193
+R2_Score test: 0.803246
+RMSE_Score_train:485371.330401
+RMSE_Score_test:488927.132141
 
 
-
-
-XGBoost-
-To understand XGBoost we have to know gradient boosting beforehand. 
-Gradient Boosting- 
-Gradient boosted trees consider the special case where the simple model is a decision tree
-
-In this case, there are going to be 2 kinds of parameters P: the weights at each leaf, w, and the number of leaves T in each tree (so that in the above example, T=3 and w=[2, 0.1, -1]).
-When building a decision tree, a challenge is to decide how to split a current leaf. For instance, in the above image, how could I add another layer to the (age > 15) leaf? A ‘greedy’ way to do this is to consider every possible split on the remaining features (so, gender and occupation), and calculate the new loss for each split; you could then pick the tree which most reduces your loss.
-
-
-XGBoost is one of the fastest implementations of gradient boosting. trees. It does this by tackling one of the major inefficiencies of gradient boosted trees: considering the potential loss for all possible splits to create a new branch (especially if you consider the case where there are thousands of features, and therefore thousands of possible splits). XGBoost tackles this inefficiency by looking at the distribution of features across all data points in a leaf and using this information to reduce the search space of possible feature splits.
-
-7.2. Model performance:
+          4.2. Model performance:
 
 Model can be evaluated by various metrics such as:
-Confusion Matrix-
-The confusion matrix is a table that summarizes how successful the classification modelis at predicting examples belonging to various classes. One axis of the confusion 
-matrix is the label that the model predicted, and the other axis is the actual label.
+Root Mean Square Error-
+Root Mean Square Error (RMSE) is the standard deviation of the residuals (prediction errors). Residuals are a measure of how far from the regression line data points are; RMSE is a measure of how spread out these residuals are. In other words, it tells you how concentrated the data is around the line of best fit.
 
-Precision/Recall-
-Precision is the ratio of correct positive predictions to the overall number of positive predictions : TP/TP+FP
-Recall is the ratio of correct positive predictions to the overall number of positive examples in the set: TP/FN+TP
-
-Accuracy-
-Accuracy is given by the number of correctly classified examples divided by the total number
-of classified examples. In terms of the confusion matrix, it is given by: TP+TN/TP+TN+FP+FN
-
-Area under ROC Curve(AUC)- 
-ROC curves use a combination of the true positive rate (the proportion of positive examples predicted correctly, defined exactly as recall) and false positive rate (the proportion of negative examples predicted incorrectly) to build up a summary picture of the classification performance.
+It gets influenced by outliers.
 
 
-7.3. Hyper parameter tuning:
-Hyperparameters are sets of information that are used to control the way of learning an algorithm. Their definitions impact parameters of the models, seen as a way of learning, change from the new hyperparameters. This set of values affects performance, stability and interpretation of a model. Each algorithm requires a specific hyperparameters grid that can be adjusted according to the business problem. Hyperparameters alter the way a model learns to trigger this training algorithm after parameters to generate outputs.
+
+Mean Absolute Error- Mean Absolute Error is a model evaluation metric used with regression models. The mean absolute error of a model with respect to a test set is the mean of the absolute values of the individual prediction errors on all instances in the test set. Each prediction error is the difference between the true value and the predicted value for the instance. 
+
+
+
+
+We choose MAE and not RMSE as the deciding factor because of the following reasons:
+RMSE is heavily influenced by outliers as the higher the values get the more the RMSE increases. MAE doesn’t increase with outliers.
+MAE is linear and RMSE is quadratically increasing.
+
+4.3. Hyper parameter tuning:
+Hyperparameters are sets of information that are used to control the way of learning an algorithm. Their definitions impact parameters of the models, seen as a way of learning, change from the new hyperparameters. This set of values affects performance, stability and interpretation of a model. Each algorithm requires a specific hyperparameters grid that can be adjusted according to the business problem. Hyperparameters alter the way a model 
+learns to trigger this training algorithm after parameters to generate outputs.
 
 We used Grid Search CV, Randomized Search CV and Bayesian Optimization for hyperparameter tuning. This also results in cross validation and in our case we divided the dataset into different folds. The best performance improvement among the three was by Bayesian Optimization.
 
-Grid Search CV-Grid Search combines a selection of hyperparameters established by the scientist and runs through all of them to evaluate the model’s performance. Its advantage is that it is a simple technique that will go through all the programmed combinations. The biggest disadvantage is that it traverses a specific region of the parameter space and cannot understand which movement or which region of the space is important to optimize the model.
+Grid Search CV-Grid Search combines a selection of hyperparameters established by the scientist and runs through all of them to evaluate the model’s performance. Its advantage is that it is a simple technique that will go through all the programmed combinations.
+The common hyperparameters which we extracted were n_estimators, max_depth, verbose=1 and cv = KFold.
 
 Randomized Search CV- In Random Search, the hyperparameters are chosen at random within a range of values that it can assume. The advantage of this method is that there is a greater chance of finding regions of the cost minimization space with more suitable hyperparameters, since the choice for each iteration is random. The disadvantage of this method is that the combination of hyperparameters is beyond the scientist’s control
 
 Bayesian Optimization- Bayesian Hyperparameter optimization is a very efficient and interesting way to find good hyperparameters. In this approach, in naive interpretation way is to use a support model to find the best hyperparameters.A hyperparameter optimization process based on a probabilistic model, often Gaussian Process, will be used to find data from data observed in the later distribution of the performance of the given models or set of tested hyperparameters.
-
 As it is a Bayesian process at each iteration, the distribution of the model’s performance in relation to the hyperparameters used is evaluated and a new probability distribution is generated. With this distribution it is possible to make a more appropriate choice of the set of values that we will use so that our algorithm learns in the best possible way.
 
 
 
-8. Conclusion:
+5. Conclusion:
 
 That's it! We reached the end of our exercise.
 Starting with loading the data so far we have done EDA , null values treatment, encoding of categorical columns, feature selection and then model building.
-In all of these models our accuracy revolves in the range of 70 to 74%.
-And there is no such improvement in accuracy score even after hyperparameter tuning.
-So the accuracy of our best model is 73% which can be said to be good for this large dataset. This performance could be due to various reasons like: no proper pattern of data, too much data, not enough relevant features.
-
-
+In all of these models our errors have been in the range of 2,00,000 which is around 10% of the average views. We have been 
+able to correctly predict views 90% of the time.
+After hyper parameter tuning, we have prevented overfitting and decreased errors by regularizing and reducing learning rate.
+Given that only 10% is errors, our models have performed very well on unseen data due to various factors like feature selection,correct model selection,etc.
  
+Future work:
+We can do a dynamic regression time series modelling due to the availability of the time features.
+We can improve the views on the less popular topics by inviting more popular speakers.
+We can use topic modelling to tackle views in each topic separately.
+
 
 
 
